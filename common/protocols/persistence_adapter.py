@@ -14,9 +14,5 @@ class PersistenceAdapter(Protocol[D, I]):
         ...
 
     @abstractmethod
-    def update(self, domain: D) -> D:
-        ...
-
-    @abstractmethod
     def delete_by_id(self, _id: I):
         ...

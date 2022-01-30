@@ -21,13 +21,6 @@ class BookPersistenceAdapter(BaseUseCase[BookPersistenceUnitOfWork], Persistence
         return domain
 
     @async_transactional()
-    async def update(self, domain: Book) -> Book:
-        book = await self.find_by_id(domain.id)
-        self.uow.repository.update_from_entity(book, domain)
-
-        return book
-
-    @async_transactional()
     async def delete_by_id(self, _id: BookId):
         entity = await self.uow.repository.find_by_pk(_id)
         if entity:

@@ -21,13 +21,6 @@ class AuthorPersistenceAdapter(BaseUseCase[AuthorPersistenceUnitOfWork], Persist
         return domain
 
     @async_transactional()
-    async def update(self, domain: Author) -> Author:
-        author = self.uow.repository.find_by_pk(domain.id)
-        self.uow.repository.update_from_entity(author, domain)
-
-        return author
-
-    @async_transactional()
     async def delete_by_id(self, _id: AuthorId):
         author = self.uow.repository.find_by_pk(_id)
         if author:
