@@ -38,6 +38,6 @@ def start_mapper():
 
     mapper_registry.map_imperatively(Author, t, properties={
         'name': composite(Name, t.c.first_name, t.c.last_name),
-        'book_ids': relationship(AuthorBook)
+        'book_ids': relationship(AuthorBook, lazy='joined')
     })
     mapper_registry.map_imperatively(AuthorBook, rt)

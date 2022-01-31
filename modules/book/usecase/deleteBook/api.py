@@ -1,6 +1,5 @@
 from dependency_injector.wiring import Provide, inject
 from fastapi import Depends, Path
-from fastapi.responses import PlainTextResponse
 from starlette import status
 
 from container import Container
