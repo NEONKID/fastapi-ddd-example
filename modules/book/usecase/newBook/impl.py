@@ -3,17 +3,15 @@ from pymfdata.rdb.transaction import async_transactional
 
 from modules.book.domain.aggregate.model import Book
 from modules.book.usecase.newBook.command import NewBookCommand
-from modules.book.infrastructure.persistence.adapter import BookPersistenceAdapter
-from modules.book.infrastructure.query.dto import BookDTO
-from modules.book.infrastructure.query.uow import BookQueryUnitOfWork
+from modules.book.infrastructure.persistence.uow import BookPersistenceUnitOfWork
 
 
-class NewBookUseCase(BaseUseCase[BookQueryUnitOfWork]):
-    def __init__(self, bpa: BookPersistenceAdapter, uow: BookQueryUnitOfWork) -> None:
+class NewBookUseCase(BaseUseCase[BookPersistenceUnitOfWork]):
+    def __init__(self, uow: BookPersistenceUnitOfWork) -> None:
         self._uow = uow
-        self.book_persistence_adapter = bpa
 
-    @async_transactional(read_only=True)
-    async def invoke(self, command: NewBookCommand) -> BookDTO:
-        save_book = await self.book_persistence_adapter.insert(Book.new_book(command))
-        return await self.uow.repository.fetch_by_id(save_book.id)
+    @async_transactional()
+    async def invoke(self, command: NewBookCommand) -> Book:
+        book = Book.new_book(command)
+        self.uow.repository.create(book)
+        return book

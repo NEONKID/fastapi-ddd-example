@@ -12,4 +12,5 @@ from .impl import NewBookCommand
 @router.post(path='', name="New Book", status_code=status.HTTP_201_CREATED)
 @inject
 async def new_book(command: NewBookCommand, uc: NewBookUseCase = Depends(Provide[Container.new_book_use_case])):
-    return await uc.invoke(command)
+    book = await uc.invoke(command)
+    return book.id

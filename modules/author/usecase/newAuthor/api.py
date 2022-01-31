@@ -22,10 +22,11 @@ class NewAuthorRequest(BaseModel):
 @inject
 async def new_author(command: NewAuthorRequest,
                      uc: NewAuthorUseCase = Depends(Provide[Container.new_author_use_case])):
-    return await uc.invoke(
+    author = await uc.invoke(
         NewAuthorCommand(
             name=Name(first_name=command.first_name, last_name=command.last_name),
             age=command.age,
             biography=command.biography
         )
     )
+    return author.id

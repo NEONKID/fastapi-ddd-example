@@ -1,16 +1,19 @@
 from pymfdata.common.usecase import BaseUseCase
+from pymfdata.rdb.transaction import async_transactional
 
-from modules.author.infrastructure.persistence.adapter import AuthorPersistenceAdapter
+from modules.author.domain.aggregate.model import Author
+from modules.author.infrastructure.persistence.uow import AuthorPersistenceUnitOfWork
 
 from .command import AddBookToAuthorCommand
 
 
-class AddBookToAuthorUseCase(BaseUseCase):
-    def __init__(self, apa: AuthorPersistenceAdapter) -> None:
-        self.author_persistence_adapter = apa
+class AddBookToAuthorUseCase(BaseUseCase[AuthorPersistenceUnitOfWork]):
+    def __init__(self, uow: AuthorPersistenceUnitOfWork) -> None:
+        self._uow = uow
 
-    async def invoke(self, command: AddBookToAuthorCommand):
-        author = await self.author_persistence_adapter.find_by_id(command.author_id)
+    @async_transactional()
+    async def invoke(self, command: AddBookToAuthorCommand) -> Author:
+        author = await self.uow.repository.find_by_pk(command.author_id)
         author.add_book(command)
 
-        await self.author_persistence_adapter.update(author)
+        return author

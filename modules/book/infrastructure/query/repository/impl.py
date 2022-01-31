@@ -13,7 +13,7 @@ class BookAlchemyRepository(BaseAsyncRepository, BookQueryRepository):
         stmt = select(BookDTO).where(BookDTO.title == title)
 
         result = await self.session.execute(stmt)
-        return result.unique().scalars().first()
+        return result.unique().scalars().fetchall()
 
     async def fetch_by_id(self, _id: int) -> BookDTO:
         stmt = select(BookDTO).where(BookDTO.id == _id)
