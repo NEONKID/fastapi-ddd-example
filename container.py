@@ -19,7 +19,7 @@ from modules.book.usecase.findBookByTitle.impl import FindBookByTitleUseCase
 from modules.book.usecase.newBook.impl import NewBookUseCase
 
 
-class AppContainer(DeclarativeContainer):
+class Container(DeclarativeContainer):
     db = Singleton(AsyncSQLAlchemy, db_uri='{engine}://{username}:{password}@{host}:{port}/{db_name}'.format(
         engine='postgresql+asyncpg', username='postgres', password='postgres',
         host='127.0.0.1', port=5432, db_name='ddd_book'))

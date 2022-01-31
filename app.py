@@ -2,10 +2,12 @@ from fastapi import FastAPI
 
 from container import Container
 from core.fastapi.error import init_error_handler
+from core.fastapi.event.middleware import EventHandlerMiddleware
 from core.fastapi.responses import ORJSONResponse
 from core.fastapi.routes import add_routes
 from sqlalchemy.orm import clear_mappers
 
+from modules.author.usecase.addBookToAuthor import event_handler as book_domain_event_impl
 from modules.author.infrastructure.persistence import mapper as author_persistence_mapper
 from modules.author.infrastructure.query import mapper as author_query_mapper
 from modules.author.usecase import router as author_router
@@ -29,6 +31,7 @@ container.wire(modules=[new_author_api, new_book_api, add_author_api, delete_boo
 app.container = container
 db = container.db()
 
+app.add_middleware(EventHandlerMiddleware)
 init_error_handler(app, 'contact@neonkid.xyz')
 
 
