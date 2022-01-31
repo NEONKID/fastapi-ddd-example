@@ -29,14 +29,14 @@ class Container(DeclarativeContainer):
     book_persistence_unit_of_work = Factory(BookPersistenceUnitOfWork, engine=db.provided.engine)
     book_query_unit_of_work = Factory(BookQueryUnitOfWork, engine=db.provided.engine)
 
-    # Adapter
+    # Adapter (If you use traditional mapper)
     author_persistence_adapter = Factory(AuthorPersistenceAdapter, uow=author_persistence_unit_of_work)
     book_persistence_adapter = Factory(BookPersistenceAdapter, uow=book_persistence_unit_of_work)
 
     # Use Case
-    new_author_use_case = Factory(NewAuthorUseCase, apa=author_persistence_adapter, uow=author_query_unit_of_work)
+    new_author_use_case = Factory(NewAuthorUseCase, uow=author_persistence_unit_of_work)
 
-    add_author_use_case = Factory(AddAuthorUseCase, bpa=book_persistence_adapter, uow=book_query_unit_of_work)
-    delete_book_use_case = Factory(DeleteBookUseCase, bpa=book_persistence_adapter)
+    add_author_use_case = Factory(AddAuthorUseCase, uow=book_persistence_unit_of_work)
+    delete_book_use_case = Factory(DeleteBookUseCase, uow=book_persistence_unit_of_work)
     find_book_by_title_use_case = Factory(FindBookByTitleUseCase, uow=book_query_unit_of_work)
-    new_book_use_case = Factory(NewBookUseCase, bpa=book_persistence_adapter, uow=book_query_unit_of_work)
+    new_book_use_case = Factory(NewBookUseCase, uow=book_persistence_unit_of_work)
