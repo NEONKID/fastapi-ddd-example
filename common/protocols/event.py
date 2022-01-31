@@ -5,5 +5,5 @@ from typing import Type, Union
 
 class BaseEvent(ABC):
     @abstractmethod
-    async def invoke(self, param: Union[Type[BaseModel], None] = None) -> None:
+    async def handle(self, param: Union[Type[BaseModel], None] = None) -> None:
         ...
