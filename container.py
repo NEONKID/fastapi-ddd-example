@@ -1,5 +1,5 @@
 from dependency_injector.containers import DeclarativeContainer
-from dependency_injector.providers import Factory, Singleton, Container
+from dependency_injector.providers import Factory, Singleton
 from pymfdata.rdb.connection import AsyncSQLAlchemy
 
 from modules.author.infrastructure.persistence.adapter import AuthorPersistenceAdapter
