@@ -1,7 +1,7 @@
 from .handler import event_handler
 
 
-class EventListener:
+class EventDispatcher:
     def __init__(self) -> None:
         super().__init__()
 

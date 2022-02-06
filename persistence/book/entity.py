@@ -16,7 +16,7 @@ class BookEntity(Base):
 
     id: Union[int, Column] = Column(BigInteger, primary_key=True)
     title: Union[str, Column] = Column(String(100), nullable=False)
-    isbn: Union[str, Column] = Column(String(10), nullable=False)
+    isbn: Union[str, Column] = Column(String(10), nullable=False, unique=True)
     pages: Union[int, Column] = Column(Integer, nullable=False)
     price: Union[int, Column] = Column(BigInteger, nullable=False)
     publication_year: Union[int, Column] = Column(Integer, nullable=False)

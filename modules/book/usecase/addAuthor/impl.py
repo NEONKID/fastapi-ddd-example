@@ -1,7 +1,7 @@
 from pymfdata.common.usecase import BaseUseCase
 from pymfdata.rdb.transaction import async_transactional
 
-from core.fastapi.event.listener import EventListener
+from core.fastapi.event.dispatcher import EventDispatcher
 from core.fastapi.event.handler import event_handler
 from modules.author.usecase.addBookToAuthor.event_handler import AddBookToAuthorEventHandler
 from modules.book.domain.aggregate.model import Book
@@ -16,8 +16,9 @@ class AddAuthorUseCase(BaseUseCase[BookPersistenceUnitOfWork]):
         self._event = event
         self._uow = uow
 
+    # Transaction order
     @async_transactional()
-    @EventListener()
+    @EventDispatcher()
     async def invoke(self, command: AddAuthorCommand) -> Book:
         book: Book = await self.uow.repository.find_by_pk(command.book_id)
         book.add_author(command)
