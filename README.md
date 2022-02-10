@@ -1,6 +1,4 @@
----
 
----
 
 # FastAPI + SQLAlchemy DDD Example
 
@@ -352,8 +350,6 @@ async def test_example():
 ```
 
 PEP 20에  **Explicit is better than implicit**라는 문장이 명시되어 있습니다. 따라서 Python 답게 DDD를 구현한다고 한다면 구체적인 것보단 추상적인 것에 의존하는 스타일을 갖춘 명시적 의존성 주입이 더 어울리겠습니다.
-
-<br />
 
 
 
