@@ -1,3 +1,5 @@
+
+
 # FastAPI + SQLAlchemy DDD Example
 
 이 프로젝트는 Python의 FastAPI 프레임워크와 SQLAlchemy ORM을 이용한 Domain Driven Development 아키텍처 예제 프로젝트입니다.
@@ -37,8 +39,6 @@ $ uvicorn app:app --host=0.0.0.0 --loop=uvloop
 
 <br />
 
-
-
 ## ERD
 
 이 프로젝트는 **PostgreSQL**을 사용합니다. 책(Book)과 저자(Author)라는 두 가지 도메인을 이용하여 도서를 관리하는 프로젝트를 파이썬에서 DDD를 구현하기 위한 예시로 사용하였습니다.
@@ -58,8 +58,6 @@ DDD의 목적은 요구사항을 도메인으로 정의하고 이를 단순화 �
 그러므로 가능한 위 ERD처럼 Many-to-Many에서 벗어나 One-To-Many의 단방향 형태를 통해 가능한 관계를 제약하는 것이 중요합니다. 
 
 <br />
-
-
 
 ## SQLAlchemy classical mapping
 
@@ -109,8 +107,6 @@ Classical Mapper를 사용하려면 ```Table```로 정의된 코드가 필요한
 
 <br />
 
-
-
 ## Snowflake Identifier
 
 식별자는 해당 도메인을 식별하기 위한 번호입니다. 보통 우리는 이러한 식별자를 Database에서 제공하는 auto increment나 UUID를 사용할 것입니다. 이 방법이 틀렸다는 것이 아닙니다.
@@ -121,13 +117,11 @@ Classical Mapper를 사용하려면 ```Table```로 정의된 코드가 필요한
 
 <br />
 
-
-
 ## Event Processing
 
 어떤 도메인의 로직이 실행되었을 때 그 요구사항이 **해당 도메인에만 영향을 주는 것이 아닌 다른 도메인까지 영향을 주는 경우**에는 어떻게 문제를 해결할 수 있을까요?
 
-​	-> 책(Book)과 저자(Author) 도메인이 있을 때 저자를 조회해도 저자가 작성한 책이 나와야 하고, 책을 조회했을 때 그 책을 작성한 저자가 나와야 한다면?
+​    -> 책(Book)과 저자(Author) 도메인이 있을 때 저자를 조회해도 저자가 작성한 책이 나와야 하고, 책을 조회했을 때 그 책을 작성한 저자가 나와야 한다면?
 
 우리는 Many-to-Many가 아닌 One-to-Many라는 단방향 구조를 사용했고, 책을 등록하고 저자를 추가할 때, 그 저자의 정보에도 그 책이 추가되어야 합니다. 
 
@@ -142,7 +136,7 @@ class Book:
     price: KoreanMoney
     publication_year: Year
     authors: List[BookAuthor] = field(default_factory=list)
-        
+
     def add_author(self, command: AddAuthorCommand):
         self.authors.append(BookAuthor(book_id=self.id, author_id=command.author_id))
 ```
@@ -154,7 +148,7 @@ class Author:
     age: Age
     biography: Optional[Biography]
     book_ids: List[AuthorBook] = field(default_factory=list)
-        
+
     def add_book(self, command: AddBookToAuthorCommand):
         self.book_ids.append(AuthorBook(author_id=self.id, book_id=command.book_id))
 ```
@@ -165,7 +159,8 @@ class Author:
 
 2. Author 도메인의 트랜잭션이 길어진다면?
 
-3. 두 도메인 객체의 변경이 이뤄지는데, 그렇다면 useCase는 어느 useCase로 들어가야 할까? (한 서비스 로직에 두 가지 도메인이 결합되는 경우)
+3. 두 도메인 객체의 변경이 이뤄지는데, 그렇다면 useCase는 어느 useCase로 들어가야 할까? 
+   (*한 서비스 로직에 두 가지 도메인이 결합되는 경우*)
 
 3번 문제는 심히 **우려할만한 부분**입니다. Book은 책을 표현하는 도메인 객체인데, Author 도메인의 책을 추가하는 로직이라면, 이게 책을 추가하는 것인지 저자를 추가하는 것인지가 구분이 모호해집니다. 
 
@@ -194,8 +189,6 @@ class AuthorAddedToBookDomainEvent(BaseModel):
 이벤트를 사용함으로써 우리는 서로 다른 도메인의 로직이 섞이는 것을 방지하게 되며 차후 이러한 모습은 마이크로서비스 아키텍처(MSA)로 마이그레이션하기 유리한 조건으로 갈 수 있는 뛰어난 모놀리식 개발 방법입니다.
 
 <br />
-
-
 
 ## Unit Of Work and Repository
 
@@ -257,8 +250,6 @@ class BookPersistenceUnitOfWork(AsyncSQLAlchemyUnitOfWork):
 
 <br />
 
-
-
 ## Command and Query (CQRS)
 
 이 프로젝트에서 도서 조회, 저자 조회 기능을 구현하려면 여러 Agregate에서 데이터를 가져와야 합니다. Book 도메인에서 저자 정보를 가져와야 하고, Author에서 도서 정보를 가져와야 합니다.
@@ -313,4 +304,57 @@ class BookDTO:
 조회 모델은 단순히 데이터를 읽어와 조회하는 용도로 사용하기 때문에 영속 과정처럼 응용 로직(UseCase) 클래스를 별도로 구현하지 않고, 바로 Router나 Controller에서 구현해도 문제가 되지 않습니다. 다만 데이터를 표현하는 과정에서 몇 가지 로직을 더 필요로 한다면 별도의 응용 로직(UseCase) 클래스를 구현해도 무방합니다.
 
 <br />
+
+## DI (Dependency Injection)
+
+명시적 의존성 주입은 DDD에서 테스트를 더욱 쉽게 해주기 위한 수단입니다.
+
+FastAPI에서는 ```Depends```가 의존성 주입 역할을 합니다. 하지만 이것은 파이썬의 표준 방법인 import 방식이며 이는 **암시적(묵시적) 의존성 주입**입니다. 
+
+물론 암시적 의존성 주입 방식에서 테스트를 위해 무언가 바꿀 수 있도록 몽키 패치(Monkey Patch)를 진행할 수도 있습니다. 그러나 이는 모든 테스트마다 ```mock.patch```를 호출해야 하며 원치 않는 부작용을 방지하기 위해 수많은 Mock을 사용해야 합니다. 
+
+그렇다면 명시적 의존성을 쓰는 방법이 있는데, 명시적 의존성을 사용하면 애플리케이션이 더욱 복잡해집니다. (컨테이너 등을 추가하고, 디펜던시를 관리해야 하는 등) 
+
+이를 댓가로 테스트 코드를 더욱 쉽게 작성할 수 있다면 이 방법을 쓰는 것도 나쁘지 않다고 생각했으며 도메인 로직을 기준으로 여러 애플리케이션 (예: 관리자 API, 사용자 API 등)을 구현해야 한다면, 컨테이너를 사용해 의존성을 관리하는 것이 오히려 이득일 것입니다.
+
+우리가 이 모든 것을 신경써서 구현하기에는 한계가 있다고 느껴진디면 Dependency Injector 라이브러리를 이용해 볼 수 있습니다.
+
+```python
+from dependency_injector.containers import DeclarativeContainer
+from dependency_injector.providers import Factory, Singleton
+
+
+class Container(DeclarativeContainer):
+    ...
+```
+
+의존성을 Singleton, Factory 등 다양한 주입 방식을 제공하고, 애플리케이션이 실행되는 시점에 Container를 생성한 다음, FastAPI에서 제공하는 ```Depends```를 같이 이용하면 api가 호출될 때 해당 의존성을 같이 가져올 수 있습니다.
+
+이런식으로 구성된 컨테이너는 테스트 코드 작성시 ```override```를 통하여 쉽게 의존성을 Mocking하고 구현할 수 있습니다.
+
+```python
+import pytest
+from unittest.mock import AsyncMock
+
+_use_case_mock = AsyncMock(spec=AddBookToAuthorUseCase)
+
+        
+@pytest.mark.asyncio
+async def test_example():
+    _use_case_mock.invoke.return_value = ...
+
+    with api.container.add_book_to_author_use_case.override(_use_case_mock):
+        ...
+
+    _use_case_mock.invoke.assert_called_once_with(...)
+```
+
+PEP 20에  **Explicit is better than implicit**라는 문장이 명시되어 있습니다. 따라서 Python 답게 DDD를 구현한다고 한다면 구체적인 것보단 추상적인 것에 의존하는 스타일을 갖춘 명시적 의존성 주입이 더 어울리겠습니다.
+
+
+
+
+
+
+
 
