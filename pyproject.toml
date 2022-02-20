@@ -6,13 +6,13 @@ authors = ["Neon K.I.D <contact@neonkid.xyz>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-fastapi = "^0.73.0"
-uvicorn = {extras = ["standard"], version = "^0.17.4"}
-asyncpg = "^0.25.0"
+fastapi = "^0.74.0"
+uvicorn = {extras = ["standard"], version = "^0.17.5"}
 dependency-injector = {extras = ["yaml"], version = "^4.38.0"}
 loguru = "^0.6.0"
-orjson = "^3.6.6"
+orjson = "^3.6.7"
 python-mf-data = {extras = ["rdb"], version = "^0.2.5"}
+asyncpgsa = "^0.27.1"
 
 [tool.poetry.dev-dependencies]
 black = "^22.1.0"
