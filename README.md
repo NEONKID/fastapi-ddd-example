@@ -189,7 +189,7 @@ By using events, we avoid mixing up logic from different domains, and this is an
 
 ## Unit Of Work and Repository
 
-The repository pattern (Repository) is an abstraction of persistent storage (DB). In Python, to abstract classes, ```ABC``` or [duck typing] (https://en.wikipedia.org/wiki/%EB%8D%95_%ED%83%80%EC%9D%B4) %ED%95%91#:~:text=%EC%BB%B4%ED%93%A8%ED%84%B0%20%ED%94%84%EB%A1%9C%EA%B7%B8 %EB%9E%98%EB%B0%8D%20%EB%B6%84%EC%95%BC%EC%97%90%EC%84%9C%20%EB%8D%95,%EC% 9D%84%20%EA%B2%B0%EC%A0%95%ED%95%98%EB%8A%94%20%EA%B2%83%EC%9D%84%20%EB%A7% 90%ED%95%9C%EB%8B%A4.&text=%EC%97%AC%EA%B8%B0%EC%97%90%EB%8A%94%20%EC%9D%B8%EC %9E%90%EB%A1%9C%20%EB%B0%9B%EC%9D%80,%ED%95%98%EA%B2%A0%EB%8B%A4%EB%8A%94% 20%EC%95%94%EC%8B%9C%EA%B0%80%20%EA%B9%94%EB%A0%A4%EC%9E%88%EB%8B%A4.) However, when using the storage pattern, you are putting the rules of implementation, not inheritance. In this case, Python's ```Protocol``` is more useful.
+The repository pattern (Repository) is an abstraction of persistent storage (DB). In Python, to abstract classes, ```ABC``` or [Duck typing](https://en.wikipedia.org/wiki/Duck_typing) However, when using the storage pattern, you are putting the rules of implementation, not inheritance. In this case, Python's ```Protocol``` is more useful.
 
 ```python
 from abc import abstractmethod
